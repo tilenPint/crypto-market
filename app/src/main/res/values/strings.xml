@@ -1,3 +1,16 @@
 <resources>
     <string name="app_name">Crypto Market</string>
+    <string name="search">Search</string>
+    <string name="clear">Clear</string>
+    <string name="error_title">Error</string>
+    <string name="error_empty">Can not find any trading pair symbols</string>
+    <string name="error_unknown">Something went wrong. try again later.</string>
+    <string name="error_no_network_title">Network Error</string>
+    <string name="error_no_network">Oops. Check your network</string>
+    <string name="error_no_network_data">Oops. Check your network. You may have stale data.</string>
+    <string name="error_with_data">Oops. There was an error. Data may be outdated</string>
+    <string name="all">All</string>
+    <string name="warning">Warning</string>
+    <string name="try_again">Try again</string>
+    <string name="positive_return">%.2f%%</string>
 </resources>
