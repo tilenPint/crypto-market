@@ -1,7 +1,7 @@
 package com.tilenpint.cryptomarket.presentation
 
-import android.accounts.NetworkErrorException
 import app.cash.turbine.test
+import com.tilenpint.cryptomarket.base.NoNetwork
 import com.tilenpint.cryptomarket.domain.repository.TickersRepository
 import com.tilenpint.cryptomarket.network.NetworkConnectionObserver
 import io.mockk.*
@@ -85,7 +85,7 @@ class TickersViewModelTest {
             awaitItem()
 
             val data = awaitItem()
-            assertTrue((data.resultTickers as Result.Error).exception is NetworkErrorException)
+            assertTrue((data.resultTickers as Result.Error).exception is NoNetwork)
             assertTrue((data.resultTickers as Result.Error).data.isNullOrEmpty())
         }
     }
@@ -106,7 +106,7 @@ class TickersViewModelTest {
             awaitItem()
 
             val data = awaitItem()
-            assertTrue((data.resultTickers as Result.Error).exception is NetworkErrorException)
+            assertTrue((data.resultTickers as Result.Error).exception is NoNetwork)
             assertTrue((data.resultTickers as Result.Error).data.isNullOrEmpty())
         }
     }
@@ -129,7 +129,7 @@ class TickersViewModelTest {
             awaitItem()
 
             val data = awaitItem()
-            assertTrue((data.resultTickers as Result.Error).exception is NetworkErrorException)
+            assertTrue((data.resultTickers as Result.Error).exception is NoNetwork)
             assertEquals((data.resultTickers as Result.Error).data, result.data)
         }
     }
@@ -150,7 +150,7 @@ class TickersViewModelTest {
             awaitItem()
 
             val data = awaitItem()
-            assertTrue((data.resultTickers as Result.Error).exception is NetworkErrorException)
+            assertTrue((data.resultTickers as Result.Error).exception is NoNetwork)
             assertEquals((data.resultTickers as Result.Error).data, progress.data)
         }
     }
