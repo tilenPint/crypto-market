@@ -4,8 +4,7 @@ data class TradingPairSymbol(
     val symbol: String,
     val lastPrice: Float,
     val dailyChange: Float,
-    val dailyChangeRelative: Float,
-    val secondSymbol: CurrencySymbol = usdSymbol
+    val dailyChangeRelative: Float
 ) {
     private val shortSymbol = symbol
         .removePrefix("t")
@@ -17,5 +16,3 @@ data class TradingPairSymbol(
     val dailyChangePercent = dailyChangeRelative * 100
     val dailyChangeIsPositive = dailyChangePercent >= 0
 }
-
-val usdSymbol = CurrencySymbol("USD", "US Dollar")
