@@ -136,16 +136,19 @@ private fun TickersStateContent(state: TickersState) {
             verticalArrangement = Arrangement.spacedBy(16.dp),
         ) {
             items(state.filteredTickers ?: emptyList()) {
-                TickerCard(it)
+                TickerCard(
+                    modifier = Modifier.animateItem(),
+                    symbol = it
+                )
             }
         }
     }
 }
 
 @Composable
-private fun TickerCard(symbol: TradingPairSymbol) {
+private fun TickerCard(symbol: TradingPairSymbol, modifier: Modifier = Modifier) {
     Card(
-        modifier = Modifier
+        modifier = modifier
             .fillMaxWidth()
             .padding(horizontal = 8.dp)
     ) {
