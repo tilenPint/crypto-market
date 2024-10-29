@@ -25,8 +25,9 @@
 - Data also refreshes on network reconnection
 
 ## TODO
-- Add GitHub Actions to create pull requests and automatically run tests
+- Add GitHub Actions to create pull requests, automatically run tests and build release app
 - Add screenshot tests with Compose previews
 - Support more than just USD for prices
 - Navigate to a new screen when an item is clicked
-- Add some theme colors for SDK 31+
+- Add app related theme colors for SDK 31+
+- Add firebase crashlytics for production flavor
