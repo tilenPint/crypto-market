@@ -17,9 +17,7 @@ private fun List<TradingPairSymbol>.filterBySearch(text: String): List<TradingPa
         filter {
             it.symbol.contains(text, ignoreCase = true) ||
                 it.mainSymbol.shortName.contains(text, ignoreCase = true) ||
-                it.mainSymbol.fullName?.contains(text, ignoreCase = true) == true ||
-                it.secondSymbol.shortName.contains(text, ignoreCase = true) ||
-                it.secondSymbol.fullName?.contains(text, ignoreCase = true) == true
+                it.mainSymbol.fullName?.contains(text, ignoreCase = true) == true
         }
     }
 }

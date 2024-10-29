@@ -34,12 +34,12 @@ import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.tilenpint.cryptomarket.R
 import com.tilenpint.cryptomarket.base.EmptyError
 import com.tilenpint.cryptomarket.base.FullScreenPreview
-import com.tilenpint.cryptomarket.data.TradingPairSymbol
 import com.tilenpint.cryptomarket.base.LoadingStyle
 import com.tilenpint.cryptomarket.base.NoNetwork
 import com.tilenpint.cryptomarket.base.Result
 import com.tilenpint.cryptomarket.base.SearchEmptyError
 import com.tilenpint.cryptomarket.data.CurrencySymbol
+import com.tilenpint.cryptomarket.data.TradingPairSymbol
 import com.tilenpint.cryptomarket.presentation.test.btcUsdTest
 import com.tilenpint.cryptomarket.presentation.test.ethUsdTest
 import com.tilenpint.cryptomarket.ui.ErrorBannerSwipeToDismissComponent
@@ -48,9 +48,9 @@ import com.tilenpint.cryptomarket.ui.SearchField
 import com.tilenpint.cryptomarket.ui.theme.AppColor
 import com.tilenpint.cryptomarket.ui.theme.CryptoMarketTheme
 import com.tilenpint.cryptomarket.ui.theme.Typography
+import com.tilenpint.cryptomarket.util.CurrencyFormatter
 import kotlinx.serialization.Serializable
 import org.koin.compose.viewmodel.koinViewModel
-import java.util.Locale
 
 @Composable
 fun TickersScreen(
@@ -186,15 +186,7 @@ private fun TickerCard(symbol: TradingPairSymbol, modifier: Modifier = Modifier)
                 Row {
                     Text(
                         style = Typography.titleMedium,
-                        text = symbol.secondSymbol.symbol?.getSymbol(Locale.getDefault())
-                            ?: symbol.secondSymbol.shortName
-                    )
-
-                    Spacer(modifier = Modifier.size(4.dp))
-
-                    Text(
-                        style = Typography.titleMedium,
-                        text = stringResource(R.string.two_decimals, symbol.lastPrice)
+                        text = CurrencyFormatter.format(symbol.lastPrice)
                     )
                 }
                 Text(
