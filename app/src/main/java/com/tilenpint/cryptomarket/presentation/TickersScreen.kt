@@ -178,15 +178,12 @@ private fun TickerCard(symbol: TradingPairSymbol) {
 
                     Text(
                         style = Typography.titleMedium,
-                        text = symbol.lastPrice.toString()
+                        text = stringResource(R.string.two_decimals, symbol.lastPrice)
                     )
                 }
                 Text(
                     style = Typography.bodyMedium,
-                    text = stringResource(
-                        R.string.positive_return,
-                        symbol.dailyChangePercent
-                    ),
+                    text = stringResource(R.string.percentage_return, symbol.dailyChangePercent),
                     color = if (symbol.dailyChangeIsPositive) {
                         AppColor.Green
                     } else {
