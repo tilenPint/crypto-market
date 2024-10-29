@@ -16,7 +16,15 @@ android {
         versionCode = 1
         versionName = "1.0"
 
+        testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
+
         buildConfigField("String", "BITFINEX_API", "\"https://api-pub.bitfinex.com/v2/\"")
+    }
+
+    testOptions {
+        unitTests.all {
+            it.useJUnitPlatform()
+        }
     }
 
     buildTypes {
@@ -65,4 +73,12 @@ dependencies {
 
     implementation(libs.moshi.kotlin)
     implementation(libs.retrofit.moshi)
+
+
+    testImplementation(libs.junit.jupiter)
+    testImplementation(libs.mockk)
+    testImplementation(libs.kotlinx.coroutines.test)
+    testImplementation(libs.turbine)
+
+    testImplementation(kotlin("test"))
 }
