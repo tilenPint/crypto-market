@@ -29,3 +29,4 @@
 - Add screenshot tests with Compose previews
 - Support more than just USD for prices
 - Navigate to a new screen when an item is clicked
+- Add some theme colors for SDK 31+
