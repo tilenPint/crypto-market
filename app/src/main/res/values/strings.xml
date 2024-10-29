@@ -12,5 +12,6 @@
     <string name="all">All</string>
     <string name="warning">Warning</string>
     <string name="try_again">Try again</string>
-    <string name="positive_return">%.2f%%</string>
+    <string name="two_decimals">%.2f</string>
+    <string name="percentage_return">%.2f%%</string>
 </resources>
