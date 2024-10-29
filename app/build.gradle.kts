@@ -74,6 +74,7 @@ dependencies {
     implementation(libs.moshi.kotlin)
     implementation(libs.retrofit.moshi)
 
+    implementation(libs.androidx.core.splashscreen)
 
     testImplementation(libs.junit.jupiter)
     testImplementation(libs.mockk)
