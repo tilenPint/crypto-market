@@ -2,7 +2,9 @@ package com.tilenpint.cryptomarket.presentation
 
 import android.accounts.NetworkErrorException
 import androidx.compose.foundation.Image
+import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
@@ -13,15 +15,18 @@ import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.rememberScrollState
+import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material3.Card
 import androidx.compose.material3.ExperimentalMaterial3Api
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.material3.pulltorefresh.PullToRefreshBox
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
@@ -33,6 +38,7 @@ import com.tilenpint.cryptomarket.base.FullScreenPreview
 import com.tilenpint.cryptomarket.data.TradingPairSymbol
 import com.tilenpint.cryptomarket.base.LoadingStyle
 import com.tilenpint.cryptomarket.base.Result
+import com.tilenpint.cryptomarket.data.CurrencySymbol
 import com.tilenpint.cryptomarket.presentation.test.btcUsdTest
 import com.tilenpint.cryptomarket.presentation.test.ethUsdTest
 import com.tilenpint.cryptomarket.ui.ErrorBannerSwipeToDismissComponent
@@ -151,13 +157,7 @@ private fun TickerCard(symbol: TradingPairSymbol) {
             verticalAlignment = Alignment.CenterVertically
         ) {
             Row(verticalAlignment = Alignment.CenterVertically) {
-                symbol.mainSymbol.img?.let {
-                    Image(
-                        modifier = Modifier.size(48.dp),
-                        painter = painterResource(it),
-                        contentDescription = symbol.mainSymbol.shortName
-                    )
-                }
+                CircularPlaceholder(symbol.mainSymbol)
 
                 Spacer(modifier = Modifier.size(8.dp))
 
@@ -206,6 +206,30 @@ private fun SwipeError(
         throwable = result.exception,
         modifier = modifier
     )
+}
+
+@Composable
+private fun CircularPlaceholder(symbol: CurrencySymbol) {
+    if (symbol.img != null) {
+        Image(
+            modifier = Modifier.size(48.dp),
+            painter = painterResource(symbol.img),
+            contentDescription = symbol.shortName
+        )
+    } else {
+        Box(
+            modifier = Modifier
+                .size(48.dp)
+                .clip(CircleShape)
+                .background(MaterialTheme.colorScheme.primary.copy(alpha = 0.2f)),
+            contentAlignment = Alignment.Center
+        ) {
+            Text(
+                style = Typography.titleLarge,
+                text = symbol.shortName.uppercase().take(1)
+            )
+        }
+    }
 }
 
 @Serializable
