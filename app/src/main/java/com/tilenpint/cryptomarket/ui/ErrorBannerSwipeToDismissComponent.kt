@@ -1,6 +1,5 @@
 package com.tilenpint.cryptomarket.ui
 
-import android.accounts.NetworkErrorException
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxWidth
@@ -22,6 +21,7 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import com.tilenpint.cryptomarket.R
 import com.tilenpint.cryptomarket.base.ComponentPreview
+import com.tilenpint.cryptomarket.base.NoNetwork
 import com.tilenpint.cryptomarket.ui.theme.CryptoMarketTheme
 
 @Composable
@@ -53,7 +53,7 @@ fun ErrorBannerSwipeToDismissComponent(
             Text(
                 modifier = Modifier.padding(start = 8.dp),
                 text = stringResource(
-                    if (throwable is NetworkErrorException) {
+                    if (throwable is NoNetwork) {
                         R.string.error_no_network_data
                     } else {
                         R.string.error_with_data
@@ -69,7 +69,7 @@ fun ErrorBannerSwipeToDismissComponent(
 @Composable
 private fun ErrorBannerSwipeToDismissComponentPreview() {
     CryptoMarketTheme {
-        ErrorBannerSwipeToDismissComponent(throwable = NetworkErrorException())
+        ErrorBannerSwipeToDismissComponent(throwable = NoNetwork())
     }
 }
 
