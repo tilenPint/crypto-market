@@ -1,6 +1,5 @@
 package com.tilenpint.cryptomarket.presentation
 
-import android.accounts.NetworkErrorException
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
@@ -37,7 +36,9 @@ import com.tilenpint.cryptomarket.base.EmptyError
 import com.tilenpint.cryptomarket.base.FullScreenPreview
 import com.tilenpint.cryptomarket.data.TradingPairSymbol
 import com.tilenpint.cryptomarket.base.LoadingStyle
+import com.tilenpint.cryptomarket.base.NoNetwork
 import com.tilenpint.cryptomarket.base.Result
+import com.tilenpint.cryptomarket.base.SearchEmptyError
 import com.tilenpint.cryptomarket.data.CurrencySymbol
 import com.tilenpint.cryptomarket.presentation.test.btcUsdTest
 import com.tilenpint.cryptomarket.presentation.test.ethUsdTest
@@ -67,6 +68,17 @@ fun TickersScreen(
         },
         onActionForceRefresh = {
             viewModel.onAction(TickersAction.ForceRefresh)
+        },
+        onEmptyDataAction = {
+            when ((state.resultTickers as? Result.Error)?.exception) {
+                is SearchEmptyError -> {
+                    viewModel.onAction(TickersAction.ClearSearch)
+                }
+
+                else -> {
+                    viewModel.onAction(TickersAction.ForceRefresh)
+                }
+            }
         }
     )
 }
@@ -78,7 +90,8 @@ private fun TickersContent(
     state: TickersState,
     onActionSearchChange: (String) -> Unit,
     onActionSearchClear: () -> Unit,
-    onActionForceRefresh: () -> Unit
+    onActionForceRefresh: () -> Unit,
+    onEmptyDataAction: () -> Unit
 ) {
     Scaffold(
         modifier = modifier
@@ -109,7 +122,7 @@ private fun TickersContent(
                     state.resultTickers is Result.Error -> {
                         ErrorComponent(
                             e = state.resultTickers.exception,
-                            onAction = onActionForceRefresh,
+                            onAction = onEmptyDataAction,
                             modifier = Modifier
                                 .fillMaxSize()
                                 .verticalScroll(rememberScrollState()),
@@ -248,7 +261,8 @@ fun TickersContentSuccessPreview() {
             ),
             onActionSearchChange = {},
             onActionSearchClear = {},
-            onActionForceRefresh = {}
+            onActionForceRefresh = {},
+            onEmptyDataAction = {}
         )
     }
 }
@@ -263,7 +277,8 @@ fun TickersContentProgressWithDataPreview() {
             ),
             onActionSearchChange = {},
             onActionSearchClear = {},
-            onActionForceRefresh = {}
+            onActionForceRefresh = {},
+            onEmptyDataAction = {}
         )
     }
 }
@@ -275,13 +290,14 @@ fun TickersContentErrorWithDataPreview() {
         TickersContent(
             state = TickersState(
                 resultTickers = Result.Error(
-                    NetworkErrorException(),
+                    NoNetwork(),
                     listOf(btcUsdTest, ethUsdTest)
                 )
             ),
             onActionSearchChange = {},
             onActionSearchClear = {},
-            onActionForceRefresh = {}
+            onActionForceRefresh = {},
+            onEmptyDataAction = {}
         )
     }
 }
@@ -296,7 +312,8 @@ fun TickersContentProgressPreview() {
             ),
             onActionSearchChange = {},
             onActionSearchClear = {},
-            onActionForceRefresh = {}
+            onActionForceRefresh = {},
+            onEmptyDataAction = {}
         )
     }
 }
@@ -311,7 +328,8 @@ fun TickersContentErrorPreview() {
             ),
             onActionSearchChange = {},
             onActionSearchClear = {},
-            onActionForceRefresh = {}
+            onActionForceRefresh = {},
+            onEmptyDataAction = {}
         )
     }
 }
@@ -327,7 +345,8 @@ fun TickersContentWithSearchPreview() {
             ),
             onActionSearchChange = {},
             onActionSearchClear = {},
-            onActionForceRefresh = {}
+            onActionForceRefresh = {},
+            onEmptyDataAction = {}
         )
     }
 }
@@ -339,14 +358,15 @@ fun TickersContentNoNetworkWithSearchPreview() {
         TickersContent(
             state = TickersState(
                 resultTickers = Result.Error(
-                    NetworkErrorException(),
+                    NoNetwork(),
                     listOf(btcUsdTest, ethUsdTest)
                 ),
                 searchText = "eth",
             ),
             onActionSearchChange = {},
             onActionSearchClear = {},
-            onActionForceRefresh = {}
+            onActionForceRefresh = {},
+            onEmptyDataAction = {}
         )
     }
 }

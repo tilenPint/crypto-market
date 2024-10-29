@@ -1,13 +1,14 @@
 package com.tilenpint.cryptomarket.presentation
 
-import android.accounts.NetworkErrorException
 import androidx.lifecycle.viewModelScope
 import com.tilenpint.cryptomarket.base.BaseViewModel
 import com.tilenpint.cryptomarket.base.EmptyError
 import com.tilenpint.cryptomarket.domain.repository.TickersRepository
 import com.tilenpint.cryptomarket.base.LoadingStyle
+import com.tilenpint.cryptomarket.base.NoNetwork
 import kotlinx.coroutines.flow.onStart
 import com.tilenpint.cryptomarket.base.Result
+import com.tilenpint.cryptomarket.base.SearchEmptyError
 import com.tilenpint.cryptomarket.network.NetworkConnectionObserver
 import com.tilenpint.cryptomarket.network.NetworkState
 import kotlinx.coroutines.Job
@@ -44,6 +45,8 @@ class TickersViewModel(
                 it.resultTickers.data.isEmpty()
             ) {
                 Result.Error(EmptyError())
+            } else if (it.filteredTickers.isNullOrEmpty() && it.searchText.isNotEmpty()){
+                Result.Error(SearchEmptyError())
             } else {
                 it.resultTickers
             }
@@ -89,7 +92,7 @@ class TickersViewModel(
                     it.copy(
                         resultTickers = if (networkState == NetworkState.Unavailable) {
                             Result.Error(
-                                exception = NetworkErrorException(),
+                                exception = NoNetwork(),
                                 data = it.resultTickers?.data
                             )
                         } else {
