@@ -4,10 +4,10 @@ import com.tilenpint.cryptomarket.data.TradingPairSymbol
 import com.tilenpint.cryptomarket.base.Result
 
 data class TickersState(
-    val resultTickers: Result<List<TradingPairSymbol>>?,
+    val resultTickers: Result<List<TradingPairSymbol>> = Result.Progress(),
     val searchText: String = ""
 ) {
-    val filteredTickers = resultTickers?.data?.filterBySearch(searchText)
+    val filteredTickers = resultTickers.data?.filterBySearch(searchText)
 }
 
 private fun List<TradingPairSymbol>.filterBySearch(text: String): List<TradingPairSymbol> {

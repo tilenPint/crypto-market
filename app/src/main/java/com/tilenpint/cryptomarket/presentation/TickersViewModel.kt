@@ -30,16 +30,12 @@ class TickersViewModel(
 
     private var autoRefreshingTickersJob: Job? = null
 
-    private var _state = MutableStateFlow(TickersState(Result.Progress()))
-    override val state: Flow<TickersState> = _state.onStart {
+    private var _state = MutableStateFlow(TickersState())
+    override val state = _state.onStart {
         onStart()
     }.onCompletion {
         cancelAutoLoad()
-    }.stateIn(
-        scope = viewModelScope,
-        started = SharingStarted.WhileSubscribed(RELOAD_DATA_IN_MS),
-        initialValue = TickersState(Result.Progress())
-    ).map {
+    }.map {
         it.copy(
             resultTickers = if (it.resultTickers is Result.Success &&
                 it.resultTickers.data.isEmpty()
@@ -51,7 +47,11 @@ class TickersViewModel(
                 it.resultTickers
             }
         )
-    }
+    }.stateIn(
+        scope = viewModelScope,
+        started = SharingStarted.WhileSubscribed(RELOAD_DATA_IN_MS),
+        initialValue = TickersState(Result.Progress())
+    )
 
     override fun onAction(action: TickersAction) {
         when (action) {
@@ -125,7 +125,6 @@ class TickersViewModel(
         autoRefreshingTickersJob?.cancel()
         autoRefreshingTickersJob = null
     }
-
 
     companion object {
         private const val RELOAD_DATA_IN_MS = 5000L
