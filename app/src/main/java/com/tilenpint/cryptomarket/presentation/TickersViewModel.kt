@@ -83,7 +83,9 @@ class TickersViewModel(
             networkConnectionObserver.observeConnectivityAsFlow().collect { networkState ->
                 when (networkState) {
                     NetworkState.Available -> {
-                        loadTickers()
+                        if (_state.value.resultTickers !is Result.Progress) {
+                            loadTickers()
+                        }
                     }
 
                     else -> {}
