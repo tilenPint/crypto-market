@@ -56,7 +56,7 @@ import org.koin.compose.viewmodel.koinViewModel
 fun TickersScreen(
     viewModel: TickersViewModel = koinViewModel()
 ) {
-    val state = viewModel.state.collectAsStateWithLifecycle(null).value ?: return
+    val state = viewModel.state.collectAsStateWithLifecycle().value
 
     TickersContent(
         state = state,
