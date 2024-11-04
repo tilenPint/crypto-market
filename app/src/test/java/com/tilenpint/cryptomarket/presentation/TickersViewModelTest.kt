@@ -62,8 +62,9 @@ class TickersViewModelTest {
         coEvery { tickersRepository.tickers } returns flowOf(result)
 
         viewModel.state.test {
-            // Progress
+            // initial
             awaitItem()
+            // Progress
             awaitItem()
 
             assertEquals(result, awaitItem().resultTickers)
@@ -81,8 +82,9 @@ class TickersViewModelTest {
         )
 
         viewModel.state.test {
-            // Progress
+            // initial
             awaitItem()
+            // Progress
             awaitItem()
 
             val data = awaitItem()
@@ -102,8 +104,9 @@ class TickersViewModelTest {
         )
 
         viewModel.state.test {
-            // Progress
+            // initial
             awaitItem()
+            // Progress
             awaitItem()
 
             val data = awaitItem()
@@ -125,8 +128,9 @@ class TickersViewModelTest {
         )
 
         viewModel.state.test {
-            // Progress
+            // initial
             awaitItem()
+            // Progress
             awaitItem()
 
             val data = awaitItem()
@@ -146,8 +150,9 @@ class TickersViewModelTest {
         coEvery { tickersRepository.tickers } returns flowOf(progress)
 
         viewModel.state.test {
-            // Progress
+            // initial
             awaitItem()
+            // Progress
             awaitItem()
 
             val data = awaitItem()
@@ -167,8 +172,9 @@ class TickersViewModelTest {
         )
 
         viewModel.state.test {
-            // Progress
+            // initial
             awaitItem()
+            // Progress
             awaitItem()
 
             val data = awaitItem()
@@ -188,8 +194,9 @@ class TickersViewModelTest {
         coEvery { tickersRepository.tickers } returns flowOf(error)
 
         viewModel.state.test {
-            // Progress
+            // initial
             awaitItem()
+            // Progress
             awaitItem()
 
             val data = awaitItem()
@@ -202,7 +209,7 @@ class TickersViewModelTest {
     fun `onAction SearchChange updates searchText in state`() = runTest {
         viewModel.onAction(TickersAction.SearchChange("search_query"))
         viewModel.state.test {
-            // Progress
+            // initial
             awaitItem()
 
             assertEquals("search_query", awaitItem().searchText)
@@ -212,7 +219,7 @@ class TickersViewModelTest {
     @Test
     fun `onAction SearchChange and ClearSearch clears searchText in state`() = runTest {
         viewModel.state.test {
-            // Progress
+            // initial
             awaitItem()
 
             viewModel.onAction(TickersAction.SearchChange("search_query"))
@@ -232,8 +239,12 @@ class TickersViewModelTest {
         coEvery { tickersRepository.tickers } returns flowOf(result)
 
         viewModel.state.test {
+            // initial
+            awaitItem()
             // Progress
             awaitItem()
+
+            assertEquals(result, awaitItem().resultTickers)
 
             viewModel.onAction(TickersAction.SearchChange("b"))
 
@@ -258,8 +269,12 @@ class TickersViewModelTest {
         coEvery { tickersRepository.tickers } returns flowOf(result)
 
         viewModel.state.test {
+            // initial
+            awaitItem()
             // Progress
             awaitItem()
+
+            assertEquals(result, awaitItem().resultTickers)
 
             viewModel.onAction(TickersAction.SearchChange("t"))
 

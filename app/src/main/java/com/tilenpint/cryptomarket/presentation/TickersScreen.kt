@@ -16,6 +16,7 @@ import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.verticalScroll
+import androidx.compose.material3.Button
 import androidx.compose.material3.Card
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.MaterialTheme
@@ -30,6 +31,8 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
+import androidx.lifecycle.Lifecycle
+import androidx.lifecycle.compose.LifecycleEventEffect
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.tilenpint.cryptomarket.R
 import com.tilenpint.cryptomarket.base.EmptyError
@@ -58,6 +61,14 @@ fun TickersScreen(
 ) {
     val state = viewModel.state.collectAsStateWithLifecycle().value
 
+    LifecycleEventEffect(Lifecycle.Event.ON_RESUME) {
+        viewModel.onAction(TickersAction.StartAutoCollecting)
+    }
+
+    LifecycleEventEffect(Lifecycle.Event.ON_PAUSE) {
+        viewModel.onAction(TickersAction.StopAutoCollecting)
+    }
+
     TickersContent(
         state = state,
         onActionSearchChange = {
@@ -81,6 +92,12 @@ fun TickersScreen(
             }
         }
     )
+
+    Button(onClick = {
+        viewModel.onAction(TickersAction.ForceRefresh)
+    }) {
+        Text("dsdsdsdsd")
+    }
 }
 
 @OptIn(ExperimentalMaterial3Api::class)

@@ -13,7 +13,6 @@ import com.tilenpint.cryptomarket.network.NetworkConnectionObserver
 import com.tilenpint.cryptomarket.network.NetworkState
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.delay
-import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.map
@@ -28,6 +27,8 @@ class TickersViewModel(
     private val networkConnectionObserver: NetworkConnectionObserver
 ) : BaseViewModel<TickersState, TickersAction>() {
 
+    private var firstRefresh = true
+
     private var autoRefreshingTickersJob: Job? = null
 
     private var _state = MutableStateFlow(TickersState())
@@ -41,7 +42,7 @@ class TickersViewModel(
                 it.resultTickers.data.isEmpty()
             ) {
                 Result.Error(EmptyError())
-            } else if (it.filteredTickers.isNullOrEmpty() && it.searchText.isNotEmpty()){
+            } else if (it.filteredTickers.isNullOrEmpty() && it.searchText.isNotEmpty()) {
                 Result.Error(SearchEmptyError())
             } else {
                 it.resultTickers
@@ -50,13 +51,12 @@ class TickersViewModel(
     }.stateIn(
         scope = viewModelScope,
         started = SharingStarted.WhileSubscribed(RELOAD_DATA_IN_MS),
-        initialValue = TickersState(Result.Progress())
+        initialValue = TickersState()
     )
 
     override fun onAction(action: TickersAction) {
         when (action) {
             TickersAction.ForceRefresh -> loadTickers()
-
 
             is TickersAction.SearchChange -> {
                 _state.update { it.copy(searchText = action.value) }
@@ -65,6 +65,10 @@ class TickersViewModel(
             TickersAction.ClearSearch -> {
                 _state.update { it.copy(searchText = "") }
             }
+
+            TickersAction.StartAutoCollecting -> autoLoadTickers()
+
+            TickersAction.StopAutoCollecting -> cancelAutoLoad()
         }
     }
 
@@ -79,13 +83,12 @@ class TickersViewModel(
             networkConnectionObserver.observeConnectivityAsFlow().collect { networkState ->
                 when (networkState) {
                     NetworkState.Available -> {
-                        loadTickers()
-                        autoLoadTickers()
+                        if (_state.value.resultTickers !is Result.Progress) {
+                            loadTickers()
+                        }
                     }
 
-                    NetworkState.Unavailable -> {
-                        cancelAutoLoad()
-                    }
+                    else -> {}
                 }
 
                 _state.update {
@@ -93,7 +96,7 @@ class TickersViewModel(
                         resultTickers = if (networkState == NetworkState.Unavailable) {
                             Result.Error(
                                 exception = NoNetwork(),
-                                data = it.resultTickers?.data
+                                data = it.resultTickers.data
                             )
                         } else {
                             it.resultTickers
@@ -105,6 +108,9 @@ class TickersViewModel(
     }
 
     private fun loadTickers() {
+        if (_state.value.resultTickers is Result.Progress && !firstRefresh) return
+        firstRefresh = false
+
         viewModelScope.launch {
             tickersRepository.loadTickers()
         }
@@ -114,6 +120,7 @@ class TickersViewModel(
         viewModelScope.launch {
             while (isActive) {
                 delay(RELOAD_DATA_IN_MS)
+                if (_state.value.resultTickers is Result.Progress) continue
                 tickersRepository.loadTickers(LoadingStyle.SILENT)
             }
         }.apply {
