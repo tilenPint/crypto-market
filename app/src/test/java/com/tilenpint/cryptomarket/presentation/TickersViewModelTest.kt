@@ -12,6 +12,7 @@ import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
 import com.tilenpint.cryptomarket.base.Result
 import com.tilenpint.cryptomarket.fake.btc
+import com.tilenpint.cryptomarket.fake.ltc
 import com.tilenpint.cryptomarket.network.NetworkState
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.flowOf
@@ -221,6 +222,58 @@ class TickersViewModelTest {
             viewModel.onAction(TickersAction.ClearSearch)
 
             assertEquals("", awaitItem().searchText)
+        }
+    }
+
+    @Test
+    fun `filtered data by search`() = runTest {
+        val result = Result.Success(listOf(btc, ltc))
+
+        coEvery { tickersRepository.tickers } returns flowOf(result)
+
+        viewModel.state.test {
+            // Progress
+            awaitItem()
+
+            viewModel.onAction(TickersAction.SearchChange("b"))
+
+            val item = awaitItem()
+
+            assertEquals(listOf(btc), item.filteredTickers)
+            assertEquals("b", item.searchText)
+
+            viewModel.onAction(TickersAction.ClearSearch)
+
+            val itemClear = awaitItem()
+
+            assertEquals(listOf(btc, ltc), itemClear.filteredTickers)
+            assertEquals("", itemClear.searchText)
+        }
+    }
+
+    @Test
+    fun `do not filter data by search because both contains both query`() = runTest {
+        val result = Result.Success(listOf(btc, ltc))
+
+        coEvery { tickersRepository.tickers } returns flowOf(result)
+
+        viewModel.state.test {
+            // Progress
+            awaitItem()
+
+            viewModel.onAction(TickersAction.SearchChange("t"))
+
+            val item = awaitItem()
+
+            assertEquals(listOf(btc, ltc), item.filteredTickers)
+            assertEquals("t", item.searchText)
+
+            viewModel.onAction(TickersAction.ClearSearch)
+
+            val itemClear = awaitItem()
+
+            assertEquals(listOf(btc, ltc), itemClear.filteredTickers)
+            assertEquals("", itemClear.searchText)
         }
     }
 }
